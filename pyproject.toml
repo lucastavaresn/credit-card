@@ -10,6 +10,9 @@ python = "^3.10"
 fastapi = "^0.103.1"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
 pytest = "^7.4.2"
+sqlalchemy = "^2.0.21"
+pydantic = "^2.3.0"
+python-creditcard = {git = "https://github.com/MaisTodos/python-creditcard"}
 
 
 [build-system]
