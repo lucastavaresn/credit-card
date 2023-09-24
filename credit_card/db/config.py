@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
-from sqlalchmey.orm import sessionmaker
-from sqlalchmey.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-URL_DATABASE = 'postgresql://postgres:postgres!localhost:5432/maisTodos'
+URL_DATABASE = 'sqlite:///./maisTodos.db'
 
 engine = create_engine(URL_DATABASE)
 

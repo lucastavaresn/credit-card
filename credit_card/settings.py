@@ -1,7 +1,5 @@
-from typing import Annotated
-from credit_card.db.config import SessionLocal
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
+from credit_card.db.config import Base, engine
+from fastapi import FastAPI
 from credit_card.routes import credit_card
 
 def init_app() -> FastAPI:
@@ -9,15 +7,6 @@ def init_app() -> FastAPI:
     app = FastAPI()
 
     app.include_router(credit_card.router, prefix="/api")
-
+    Base.metadata.create_all(bind=engine)
     return app
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-db_dependency = Annotated[Session, Depends(get_db)]
 

@@ -2,7 +2,6 @@ from typing import Optional
 import calendar
 import logging
 from datetime import date, datetime
-
 from creditcard import CreditCard
 from pydantic import BaseModel, Field, field_validator
 
@@ -13,17 +12,17 @@ class CreditCardSchema(BaseModel):
     number: str
     cvv: Optional[str] = Field(min_length=3, max_length=4, default=None)
 
+    @field_validator("exp_date")
     @classmethod
-    def date_format(cls, unformatted_date: str) -> str:
+    def date_format(cls, unformatted_date: str) -> datetime:
         month_year = datetime.strptime(unformatted_date, "%m/%Y").date()
-
-        if month_year < date.today():
-            raise ValueError("The date cannot be earlier than the current one!")
-        
         last_day = cls.last_day_month(year=month_year.year, month=month_year.month)
-        full_date = f"{last_day}/{unformatted_date}"
 
-        return datetime.strftime(full_date, "%d/%m/%Y").date()
+        exp_date = datetime(month_year.year,month_year.month,last_day)
+        if exp_date < datetime.now():
+            raise ValueError("The date cannot be earlier than the current one!")
+
+        return exp_date
         
     @classmethod
     def last_day_month(cls, year: int, month:int) -> int:
@@ -35,9 +34,8 @@ class CreditCardSchema(BaseModel):
     @classmethod
     def number_validator(cls, card_number: str) -> str:
         card = CreditCard(card_number)
-
         if not card.is_valid():
-            raise ValueError("Invalid card number")
+            raise ValueError(f"Invalid card number: {card_number}")
         
         return card_number
     
@@ -48,12 +46,18 @@ class CreditCardSchema(BaseModel):
             raise ValueError("The CVV must be numeric")
         
         return int(cvv_number)
-    
-    class CreditCardResponseSchema(BaseModel):
-        id: str
-        exp_date: date
-        holder: str
-        number: str
-        cvv: int
-        brand: str
-        created_at: datetime
+
+
+class CreditCardCreateSchema(BaseModel):
+    exp_date: str
+    holder: str = Field(min_length=2)
+    number: str
+    cvv: Optional[str] = Field(min_length=3, max_length=4, default=None)
+    brand: str
+class CreditCardResponseSchema(BaseModel):
+    id: str
+    exp_date: datetime
+    holder: str
+    number: str
+    cvv: int
+    brand: str
