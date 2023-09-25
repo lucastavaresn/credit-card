@@ -1,7 +1,9 @@
-from credit_card.utils.utils import generate_uuid
-from sqlalchemy import Column, String, Date, Numeric
-from credit_card.db.config import Base
+from sqlalchemy import Column, Date, Numeric, String
 from sqlalchemy.orm import Session
+
+from credit_card.db.config import Base
+from credit_card.utils.utils import generate_uuid
+
 
 class CreditCard(Base):
     __tablename__ = "cards"
@@ -12,4 +14,3 @@ class CreditCard(Base):
     number = Column(String(255), nullable=False)
     cvv = Column(Numeric(4), nullable=True)
     brand = Column(String(20), nullable=False)
-

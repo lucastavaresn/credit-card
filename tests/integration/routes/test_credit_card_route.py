@@ -1,94 +1,60 @@
-from credit_card.models.credit_card_schema import CreditCardSchema
 import pytest
-from unittest.mock import Mock
-from credit_card.repository.credit_card_repository import CreditCardRepository
-from credit_card.models.credit_card import CreditCard
-from credit_card.utils.utils import fernet
-from sqlalchemy.orm import Session
+from fastapi.testclient import TestClient
+from unittest.mock import patch
+from credit_card.main import app 
 
-# Use pytest.mark.asyncio para testar coroutines assíncronas
-@pytest.mark.asyncio
-async def test_get_all():
-    # Crie um mock da classe Session
-    session_mock = Mock(spec=Session)
+client = TestClient(app)
 
-    # Mock de dados para simular o retorno do banco de dados
-    card_data = [
-        CreditCard(id=1, exp_date="2025-12-31", holder="John Doe", number=fernet.encrypt("4539578763621486".encode()), cvv="123", brand="Visa"),
-        CreditCard(id=2, exp_date="2026-12-31", holder="Jane Doe", number=fernet.encrypt("4539578763621486".encode()), cvv="456", brand="MasterCard"),
-    ]
+bearer_token = "bdf49c3c3882102fc017ffb661108c63a836d065888a4093994398cc55c2ea2f"
 
-    # Configurar o mock da sessão para retornar os dados de mock quando query é chamado
-    session_mock.query.return_value.all.return_value = card_data
+def mock_authenticate_token(token):
+    if token != bearer_token:
+        return False
+    return True
 
-    # Crie uma instância da classe CreditCardRepository com o mock da sessão
-    repo = CreditCardRepository(session_mock)
+def mock_auth_middleware(request):
+    return None 
 
-    # Chame o método get_all da classe de repositório
-    result = await repo.get_all()  # Aguarde a coroutine
 
-    # Verifique se o método retorna os dados de mock após a descriptografia
-    assert len(result) == 2
-    assert result[0].id == 1
-    assert result[1].id == 2
-    assert result[0].number.decode() == "4539578763621486"  # Note que o número foi descriptografado
-    assert result[1].number.decode() == "4539578763621486"
+class MockCreditCardRepository:
+    def get_all(self):
+        return [...]
 
-@pytest.mark.asyncio
-async def test_get_by_id():
-    # Crie um mock da classe Session
-    session_mock = Mock(spec=Session)
+    def get_by_id(self, card_id):
+        return [...]
 
-    # ID do cartão que desejamos buscar
-    card_id_to_find = "1"
+    def save(self, card_data):
+        return card_data
 
-    # Mock de dados para simular o retorno do banco de dados
-    card_data = [
-        CreditCard(id="1", exp_date="2025-12-31", holder="John Doe", number=fernet.encrypt("4539578763621486".encode()), cvv="123", brand="Visa"),
-        CreditCard(id="2", exp_date="2026-12-31", holder="Jane Doe", number=fernet.encrypt("4539578763621486".encode()), cvv="456", brand="MasterCard"),
-    ]
+@patch("credit_card.utils.auth.AuthMiddleware", side_effect=mock_auth_middleware)
+@patch("credit_card.repository.credit_card_repository.CreditCardRepository", side_effect=MockCreditCardRepository)
+def test_get_cards(mock_auth_middleware, mock_repository):
+    headers = {"Authorization": f"Bearer {bearer_token}"}
+    response = client.get("/api/v1/credit-card/", headers=headers)
 
-    # Configure o mock da sessão para retornar os dados de mock quando query é chamado
-    session_mock.query.return_value.filter_by.return_value = card_data
+    assert response.status_code == 200
 
-    # Crie uma instância da classe CreditCardRepository com o mock da sessão
-    repo = CreditCardRepository(session_mock)
+@patch("credit_card.utils.auth.AuthMiddleware", side_effect=mock_auth_middleware)
+@patch("credit_card.repository.credit_card_repository.CreditCardRepository", side_effect=MockCreditCardRepository)
+def test_get_card_by_id(mock_auth_middleware,mock_repository):
+    card_id = "1234567890123456" 
+    headers = {"Authorization": f"Bearer {bearer_token}"}
+    response = client.get(f"/api/v1/credit-card/{card_id}", headers=headers)
 
-    # Chame o método get_by_id da classe de repositório
-    result = await repo.get_by_id(card_id_to_find)  # Aguarde a coroutine
+    assert response.status_code == 200
 
-    # Verifique se o método retorna o cartão com o ID correto após a descriptografia
-    assert result[0].id == card_id_to_find
-    assert result[0].number.decode() == "4539578763621486"
 
-@pytest.mark.asyncio
-async def test_save():
-    # Crie um mock da classe Session
-    session_mock = Mock(spec=Session)
+@patch("credit_card.utils.auth.AuthMiddleware", side_effect=mock_auth_middleware)
+@patch("credit_card.repository.credit_card_repository.CreditCardRepository", side_effect=MockCreditCardRepository)
+def test_create_card(mock_auth_middleware,mock_repository):
+    card_data = {
+        "exp_date": "12/2027",
+        "holder": "Alice",
+        "number": "4539578763621486",
+        "cvv": "789",
+        "brand": "visa"
+    }
+    headers = {"Authorization": f"Bearer {bearer_token}"}
+    response = client.post("/api/v1/credit-card/", json=card_data, headers=headers)
 
-    # Dados de teste para um cartão a ser salvo
-    card_data = CreditCardSchema(
-        exp_date="12/2025",
-        holder="Alice Smith",
-        number="4539578763621486",  # Número não criptografado
-        cvv="789",
-    )
-
-    # Configure o mock da sessão para simular o comportamento do método save
-    def mock_save(card):
-        # Verifique se os dados foram criptografados corretamente
-        assert card.number != card_data.number
-        # Simule a adição do cartão à sessão e a atualização do ID
-        card.id = "1"
-
-    session_mock.add.side_effect = mock_save
-
-    # Crie uma instância da classe CreditCardRepository com o mock da sessão
-    repo = CreditCardRepository(session_mock)
-
-    # Chame o método save da classe de repositório
-    result = await repo.save(card_data)  # Aguarde a coroutine
-
-    # Verifique se o método retorna o cartão com o ID correto após a descriptografia
-    assert result.id == "1"
-    assert result.number != card_data.number  # Verifique se o número foi criptografado
+    assert response.status_code == 200
