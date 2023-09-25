@@ -13,6 +13,15 @@ pytest = "^7.4.2"
 sqlalchemy = "^2.0.21"
 pydantic = "^2.3.0"
 python-creditcard = {git = "https://github.com/MaisTodos/python-creditcard"}
+cryptography = "^41.0.4"
+pytest-mock = "^3.11.1"
+loguru = "^0.7.2"
+pip = "^23.2.1"
+install = "^1.3.5"
+httpx = "^0.25.0"
+asyncio = "^3.4.3"
+pytest-asyncio = "^0.21.1"
+black = "^23.9.1"
 
 
 [build-system]

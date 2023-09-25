@@ -1,7 +1,7 @@
-import uuid
-from credit_card.utils import generate_uuid
+from credit_card.utils.utils import generate_uuid
 from sqlalchemy import Column, String, Date, Numeric
 from credit_card.db.config import Base
+from sqlalchemy.orm import Session
 
 class CreditCard(Base):
     __tablename__ = "cards"
