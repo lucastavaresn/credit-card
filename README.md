@@ -1,5 +1,5 @@
 
-# API documentation - ** Mais Todos CardCredit **
+# API documentation -  maisTodos CardCredit 
 This is the documentation for the Mais Todos Credit Card project
 
 # Basic structure
@@ -8,18 +8,15 @@ This is the documentation for the Mais Todos Credit Card project
 
 # Summary
 
-1. [Product Overview](#1-Product-Overview)
+1. [Endpoint List](#1-Endpoint-List)
 
-2. [Endpoint List](#2-Endpoint-List)
+2. [Environment Preparation](#2-Environment-Preparation)
 
-3. [Environment Preparation](#3-Environment-Preparation)
-
-4. [Cards](#4-Cards)
-
-# 1. Product Overview 
+3. [Contact](#3-Contact)
 
 
-# 2. Endpoints List
+
+# 1. Endpoints List
     
 
     | description             |   route                                            |
@@ -33,11 +30,11 @@ This is the documentation for the Mais Todos Credit Card project
     |  Create a new card      |  POST http://localhost:8000/api/v1/credit-card     |
 
     All credit-card routes require a Bearer token, use this token in the header
-    ```shell
+    
        Bearer bdf49c3c3882102fc017ffb661108c63a836d065888a4093994398cc55c2ea2f
-    ```
+    
 
-# 3. Environment Preparation
+# 2. Environment Preparation
 ### Via Local 
 1. Clone the api repository:
     ```shell
@@ -75,7 +72,7 @@ This is the documentation for the Mais Todos Credit Card project
      ```
 
 
-# 4. Contact
+# 3. Contact
 
 > Developer:
 1. Lucas Tavares - lucastavaresn@gmail.com
