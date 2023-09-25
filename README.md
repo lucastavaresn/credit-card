@@ -58,7 +58,7 @@ This is the documentation for the Mais Todos Credit Card project
     ```shell
       export AUTH_HASH=bdf49c3c3882102fc017ffb661108c63a836d065888a4093994398cc55c2ea2f
       export CRYPTOGRAPHY_KEY=ZcpHACX8VWmhRpAkwB9d5TXWzGPwSRBWC4FzxM028Yc=
-    ``
+    ```
 
 5. Run the application:
    - Run de make command
