@@ -39,14 +39,12 @@ async def test_get_all():
 
     repo = CreditCardRepository(session_mock)
 
-    result = await repo.get_all() 
+    result = await repo.get_all()
 
     assert len(result) == 2
     assert result[0].id == 1
     assert result[1].id == 2
-    assert (
-        result[0].number.decode() == "4539578763621486"
-    )  
+    assert result[0].number.decode() == "4539578763621486"
     assert result[1].number.decode() == "4539578763621486"
 
 
@@ -82,7 +80,7 @@ async def test_get_by_id():
 
     repo = CreditCardRepository(session_mock)
 
-    result = await repo.get_by_id(card_id_to_find)  
+    result = await repo.get_by_id(card_id_to_find)
 
     assert result[0].id == card_id_to_find
     assert result[0].number.decode() == "4539578763621486"
@@ -98,7 +96,7 @@ async def test_save():
     card_data = CreditCardSchema(
         exp_date="12/2025",
         holder="Alice Smith",
-        number="4539578763621486", 
+        number="4539578763621486",
         cvv="789",
     )
 
@@ -110,7 +108,7 @@ async def test_save():
 
     repo = CreditCardRepository(session_mock)
 
-    result = await repo.save(card_data)  
+    result = await repo.save(card_data)
 
     assert result.id == "1"
-    assert result.number != card_data.number  
+    assert result.number != card_data.number
