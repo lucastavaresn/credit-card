@@ -6,6 +6,20 @@ This is the documentation for the Mais Todos Credit Card project
 ![Basic Structure](/doc/structure.png "Estrutura Basica")
 
 
+# Stack
+
+I used some technologies in the development of the project and I will explain why I chose them.
+
+**fastAPI** - fastapi is one of the most used web frameworks in the python universe, and in recent years it has been gaining popularity among developers. I have always worked with Flask and Django, but I decided to test fastAPI during this project, because it makes it easier to generate route documentation.
+
+**SQLite** - At first I was going to use **PostgreSQL** in the project, but my Windows PC was conflicting with WSL and **Docker**. I tried formatting the HD and installing Ubuntu but it kept giving me a corrupt image error, so I didn't use Docker and I had than opting for a simpler database.
+
+**SQLAlchemy** - Is a toolkit that provides greater flexibility when dealing with relational databases
+
+**Makefile** - The Makefile helps a lot, reducing and grouping the necessary commands throughout the development process.
+
+**Poetry** - It helps with package and dependency management and creates a virtual environment for the project.
+
 # Summary
 
 1. [Endpoint List](#1-Endpoint-List)
