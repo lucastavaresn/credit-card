@@ -42,7 +42,7 @@ This is the documentation for the Mais Todos Credit Card project
     ```
 
 2. Create Virtual Env:
-    > **_NOTE:_** Install Poetry (tool for dependency packaging and environment)
+    > **_NOTE:_** Install Poetry (tool for dependency management, packaging and environment)
     ```shell
     curl -sSL https://install.python-poetry.org | python3 -
     ```
